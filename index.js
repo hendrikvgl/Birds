@@ -211,7 +211,7 @@ class Bird {
   }
 
   move() {
-    if (this.captured) {
+    if (this.captured && mE !== null) {
       this.x = mE.clientX;
       this.y = mE.clientY;
       return;
@@ -303,11 +303,15 @@ const handleMouseDown = (e) => {
 
 const handleTouchMove = (e) => {
   e.preventDefault();
+  if (e.touches[0] == null) {
+    return;
+  }
   mE = e.touches[0];
 };
 
 const handleTouchStart = (e) => {
   e.preventDefault();
+
   const cap = birds.some((bird) =>
     bird.attemptCapture(e.touches[0].clientX, e.touches[0].clientY)
   );
