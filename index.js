@@ -1,7 +1,9 @@
 console.log("Hello World");
 
+const ds = Math.min(window.innerWidth, window.innerHeight) / 1000;
+
 const TICK_RATE = 30;
-const HEIGHT_MP = 2;
+const HEIGHT_MP = 1;
 const BIRDSPEED = 4;
 const BIRD_MAX_MOVE = 1;
 const BIRDCOUNT = 30;
@@ -13,29 +15,14 @@ const BIRD_CHAOS = 0.06;
 const MOUSE_ELA_DISTANCE = 120;
 const MOUSE_ELA_FORCE = 0.25;
 const FOOD_BOX = 10;
-const BIRD_BOX = 50;
+const BIRD_BOX = 50 * ds;
 const BIRD_FLOCK_MIN_DIS = 120;
 const BIRD_FLOCK_MAX_DIS = 110;
 const BIRD_FLOCK_PUSH_FORCE = 0.2;
 const BIRD_FLOCK_PULL_FORCE = 0.08;
 const BIRD_FLIGHT_SPEED = 0.2;
 
-const BOXES = [
-  {
-    x: 300,
-    y: 700,
-    h: 300,
-    w: 400,
-    c: "red",
-  },
-  {
-    x: 1000,
-    y: 900,
-    h: 200,
-    w: 200,
-    c: "red",
-  },
-];
+let boxes = [];
 
 let mE = null;
 let canvas;
@@ -67,7 +54,7 @@ class Bird {
     this.img.style.top = this.y - BIRD_BOX / 2 + "px";
     this.img.style.width = BIRD_BOX;
     this.img.style.height = BIRD_BOX;
-    this.img.style.objectFit = "none";
+    this.img.style.objectFit = "cover";
     this.img.style.pointerEvents = "none";
     this.img.style.userSelect = "none";
     this.img.style.animationDuration = 1.5;
@@ -82,7 +69,7 @@ class Bird {
       this.keyframe +=
         (Math.abs(this.xVel) + Math.abs(this.yVel)) * BIRD_FLIGHT_SPEED;
       this.img.style.objectPosition = `-${
-        Math.floor(this.keyframe) * 50
+        Math.floor(this.keyframe) * BIRD_BOX
       }px 0px`;
 
       if (this.keyframe > 3) {
@@ -122,7 +109,7 @@ class Bird {
   }
 
   avoidBoxes() {
-    BOXES.forEach(({ x, y, w, h }) => {
+    boxes.forEach(({ x, y, w, h }) => {
       if (
         this.x > x - BOX_ELA_DISTANCE &&
         this.x < x + w + BOX_ELA_DISTANCE &&
@@ -200,8 +187,8 @@ class Bird {
       return;
     }
 
-    const mx = mE.layerX;
-    const my = mE.layerY;
+    const mx = mE.clientX;
+    const my = mE.clientY;
 
     if (
       Math.abs(this.x - mx) < MOUSE_ELA_DISTANCE &&
@@ -225,8 +212,8 @@ class Bird {
 
   move() {
     if (this.captured) {
-      this.x = mE.layerX;
-      this.y = mE.layerY;
+      this.x = mE.clientX;
+      this.y = mE.clientY;
       return;
     }
     this.avoidEdges();
@@ -269,19 +256,15 @@ const updateBirds = () => {
 };
 
 const spawnBoxes = () => {
-  BOXES.forEach(({ x, y, h, w, c }) => {
-    var div = document.createElement("div");
-
-    document.getElementById("canvas").appendChild(div);
-
-    div.style.position = "absolute";
-    div.style.left = x;
-    div.style.top = y;
-    div.style.width = w;
-    div.style.height = h;
-    div.style.borderColor = c;
-    div.style.borderStyle = "solid";
-  });
+  const boxCol = document.getElementById("container").children;
+  for (box of boxCol) {
+    console.log(box.style);
+    const { top, left } = box.getBoundingClientRect();
+    const width = box.offsetWidth;
+    const height = box.offsetHeight;
+    boxes.push({ x: left, y: top, h: height, w: width });
+  }
+  console.log(boxes);
 };
 
 const spawnFood = (e) => {
@@ -318,6 +301,26 @@ const handleMouseDown = (e) => {
   }
 };
 
+const handleTouchMove = (e) => {
+  e.preventDefault();
+  mE = e.touches[0];
+};
+
+const handleTouchStart = (e) => {
+  e.preventDefault();
+  const cap = birds.some((bird) =>
+    bird.attemptCapture(e.touches[0].clientX, e.touches[0].clientY)
+  );
+  if (!cap) {
+    spawnFood(e.touches[0]);
+  }
+};
+
+const handleTouchEnd = (e) => {
+  e.preventDefault();
+  birds.forEach((bird) => bird.release());
+};
+
 const handleMouseUp = () => {
   birds.forEach((bird) => bird.release());
 };
@@ -326,11 +329,12 @@ const drawFood = () => {};
 
 const setup = () => {
   canvas = document.getElementById("canvas");
+
   canvasW = window.innerWidth;
   canvasH = window.innerHeight * HEIGHT_MP;
   if (canvas !== null) {
-    canvas.style.height = canvasH.toString();
-    canvas.style.width = canvasW.toString();
+    canvas.style.maxHeight = canvasH.toString();
+    canvas.style.maxWidth = canvasW.toString();
   }
   console.log(window.innerHeight, window.innerWidth);
   spawnBirds();
@@ -339,6 +343,9 @@ const setup = () => {
   canvas?.addEventListener("mousemove", (e) => (mE = e));
   canvas?.addEventListener("mousedown", handleMouseDown);
   canvas?.addEventListener("mouseup", handleMouseUp);
+  canvas?.addEventListener("touchmove", handleTouchMove);
+  canvas?.addEventListener("touchstart", handleTouchStart);
+  canvas?.addEventListener("touchend", handleTouchEnd);
 };
 
 window.onload = setup;
