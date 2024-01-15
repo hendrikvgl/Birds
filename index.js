@@ -333,6 +333,8 @@ const setup = () => {
   canvasW = window.innerWidth;
   canvasH = window.innerHeight * HEIGHT_MP;
   if (canvas !== null) {
+    canvas.style.height = canvasH.toString();
+    canvas.style.width = canvasW.toString();
     canvas.style.maxHeight = canvasH.toString();
     canvas.style.maxWidth = canvasW.toString();
   }
