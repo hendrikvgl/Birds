@@ -1,12 +1,13 @@
-console.log("Hello World");
+import { canvas, birds, boxes, canvasW, canvasH, mE } from "../index.mjs";
 
 const ds = Math.min(window.innerWidth, window.innerHeight) / 1000;
 
-const TICK_RATE = 30;
-const HEIGHT_MP = 1;
-const BIRDSPEED = 4;
-const BIRD_MAX_MOVE = 1;
-const BIRDCOUNT = 30;
+const BIRD_BOX = 50 * ds;
+const BIRD_FLOCK_MIN_DIS = 120;
+const BIRD_FLOCK_MAX_DIS = 110;
+const BIRD_FLOCK_PUSH_FORCE = 0.2;
+const BIRD_FLOCK_PULL_FORCE = 0.08;
+const BIRD_FLIGHT_SPEED = 0.2;
 const EDGE_ELA_DISTANCE = 60;
 const EDGE_ELA_FORCE = 0.08;
 const BOX_ELA_DISTANCE = 70;
@@ -14,26 +15,10 @@ const BOX_ELA_FORCE = 0.3;
 const BIRD_CHAOS = 0.06;
 const MOUSE_ELA_DISTANCE = 120;
 const MOUSE_ELA_FORCE = 0.25;
-const FOOD_BOX = 10;
-const BIRD_BOX = 50 * ds;
-const BIRD_FLOCK_MIN_DIS = 120;
-const BIRD_FLOCK_MAX_DIS = 110;
-const BIRD_FLOCK_PUSH_FORCE = 0.2;
-const BIRD_FLOCK_PULL_FORCE = 0.08;
-const BIRD_FLIGHT_SPEED = 0.2;
+const BIRDSPEED = 4;
+const BIRD_MAX_MOVE = 1;
 
-let boxes = [];
-
-let mE = null;
-let canvas;
-let canvasW;
-let canvasH;
-let gc;
-let birds = [];
-let images = [];
-let food = [];
-
-class Bird {
+export default class Bird {
   constructor(x, y, id) {
     this.x = x;
     this.y = y;
@@ -44,7 +29,7 @@ class Bird {
     this.captured = false;
     this.target = null;
     const image = new Image();
-    image.src = "birdAnim.png";
+    image.src = "resources/birdAnim.png";
     image.id = id;
     this.keyframe = 0;
     canvas.appendChild(image);
@@ -238,127 +223,3 @@ class Bird {
     this.captured = false;
   }
 }
-
-const spawnBirds = () => {
-  for (let i = 0; i < BIRDCOUNT; i++) {
-    const x = Math.random() * canvasW;
-    const y = Math.random() * canvasH;
-
-    birds.push(new Bird(x, y, i));
-  }
-};
-
-const updateBirds = () => {
-  birds.forEach((bird) => {
-    bird.move();
-    bird.draw();
-  });
-};
-
-const spawnBoxes = () => {
-  const boxCol = document.getElementById("container").children;
-  for (box of boxCol) {
-    console.log(box.style);
-    const { top, left } = box.getBoundingClientRect();
-    const width = box.offsetWidth;
-    const height = box.offsetHeight;
-    boxes.push({ x: left, y: top, h: height, w: width });
-  }
-  console.log(boxes);
-};
-
-const spawnFood = (e) => {
-  const mx = e.layerX;
-  const my = e.layerY;
-
-  const image = new Image();
-  image.src = "food.png";
-  image.id = food.length + "food";
-  canvas.appendChild(image);
-  const img = document.getElementById(image.id);
-  img.style.position = "absolute";
-  img.style.left = parseInt(mx - FOOD_BOX / 2) + "px";
-  img.style.top = parseInt(my - FOOD_BOX / 2) + "px";
-  img.style.width = FOOD_BOX;
-  img.style.height = FOOD_BOX;
-  img.style.objectFit = "contain";
-  img.style.pointerEvents = "none";
-  img.style.userSelect = "none";
-  img.style.zIndex = -3;
-
-  food.push({
-    x: mx,
-    y: my,
-    xV: 0,
-    yV: 0,
-    img: img,
-  });
-};
-const handleMouseDown = (e) => {
-  const cap = birds.some((bird) => bird.attemptCapture(e.clientX, e.clientY));
-  if (!cap) {
-    spawnFood(e);
-  }
-};
-
-const handleTouchMove = (e) => {
-  e.preventDefault();
-  if (e.touches[0] == null) {
-    return;
-  }
-  mE = e.touches[0];
-};
-
-const handleTouchStart = (e) => {
-  e.preventDefault();
-
-  const cap = birds.some((bird) =>
-    bird.attemptCapture(e.touches[0].clientX, e.touches[0].clientY)
-  );
-  if (!cap) {
-    spawnFood(e.touches[0]);
-  }
-};
-
-const handleTouchEnd = (e) => {
-  e.preventDefault();
-  birds.forEach((bird) => bird.release());
-};
-
-const handleMouseUp = () => {
-  birds.forEach((bird) => bird.release());
-};
-
-const drawFood = () => {};
-
-const setup = () => {
-  canvas = document.getElementById("canvas");
-
-  canvasW = window.innerWidth;
-  canvasH = window.innerHeight * HEIGHT_MP;
-  if (canvas !== null) {
-    canvas.style.height = canvasH.toString();
-    canvas.style.width = canvasW.toString();
-    canvas.style.maxHeight = canvasH.toString();
-    canvas.style.maxWidth = canvasW.toString();
-  }
-  console.log(window.innerHeight, window.innerWidth);
-  spawnBirds();
-  spawnBoxes();
-
-  canvas?.addEventListener("mousemove", (e) => (mE = e));
-  canvas?.addEventListener("mousedown", handleMouseDown);
-  canvas?.addEventListener("mouseup", handleMouseUp);
-  canvas?.addEventListener("touchmove", handleTouchMove);
-  canvas?.addEventListener("touchstart", handleTouchStart);
-  canvas?.addEventListener("touchend", handleTouchEnd);
-};
-
-window.onload = setup;
-
-const tick = () => {
-  updateBirds();
-  drawFood();
-};
-
-setInterval(tick, TICK_RATE);

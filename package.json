@@ -1,0 +1,23 @@
+{
+  "name": "reference",
+  "version": "0.1.0",
+  "description": "Reference page",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server -c-1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hendrikvgl/hendrikvgl.github.io.git"
+  },
+  "author": "Hendrik Vogel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hendrikvgl/hendrikvgl.github.io/issues"
+  },
+  "homepage": "https://github.com/hendrikvgl/hendrikvgl.github.io#readme",
+  "devDependencies": {
+    "eslint": "^8.56.0"
+  }
+}
