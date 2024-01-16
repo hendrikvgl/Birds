@@ -47,7 +47,7 @@ export default class Bird {
   }
 
   resize() {
-    const factor = 0.3 + ds;
+    const factor = ds;
     BIRD_FLOCK_MIN_DIS = 120 * factor;
     BIRD_FLOCK_MAX_DIS = 110 * factor;
     BIRD_FLOCK_PUSH_FORCE = 0.2 * factor;
@@ -60,7 +60,7 @@ export default class Bird {
     MOUSE_ELA_DISTANCE = 120 * factor;
     MOUSE_ELA_FORCE = 0.25 * factor;
     BIRDSPEED = 4 * factor;
-    BIRD_MAX_MOVE = 1 * factor;
+    BIRD_MAX_MOVE = 1;
     BIRD_BOX = 50 * ds;
 
     this.img = document.getElementById(this.img.id);
