@@ -10,6 +10,7 @@ const FOOD_DISABLED = true;
 
 export let boxes = [];
 
+export let ds = 1;
 export let mE = null;
 export let canvas;
 export let canvasW;
@@ -34,15 +35,14 @@ const updateBirds = () => {
 };
 
 const spawnBoxes = () => {
+  boxes = [];
   const boxCol = document.getElementById("container").children;
   for (const box of boxCol) {
-    console.log(box.style);
     const { top, left } = box.getBoundingClientRect();
     const width = box.offsetWidth;
     const height = box.offsetHeight;
     boxes.push({ x: left, y: top, h: height, w: width });
   }
-  console.log(boxes);
 };
 
 const spawnFood = (e) => {
@@ -110,9 +110,9 @@ const handleMouseUp = () => {
 
 const handleResize = () => {
   canvas = document.getElementById("canvas");
+  ds = Math.min(Math.min(window.innerWidth, window.innerHeight) / 1000, 1.8);
 
   canvasW = window.innerWidth;
-  console.log(canvasW);
   canvasH = window.innerHeight * HEIGHT_MP;
   if (canvas !== null) {
     canvas.style.height = canvasH.toString();
@@ -122,7 +122,10 @@ const handleResize = () => {
     canvas.style.minHeight = canvasH.toString();
     canvas.style.minWidth = canvasW.toString();
   }
-  console.log(window.innerHeight, window.innerWidth);
+
+  birds.forEach((bird) => bird.resize());
+
+  spawnBoxes();
 };
 
 const drawFood = () => {};
@@ -141,9 +144,7 @@ const setup = () => {
     canvas.style.minHeight = canvasH.toString();
     canvas.style.minWidth = canvasW.toString();
   }
-  console.log(window.innerHeight, window.innerWidth);
   spawnBirds();
-  spawnBoxes();
 
   canvas?.addEventListener("mousemove", (e) => (mE = e));
   canvas?.addEventListener("mousedown", handleMouseDown);
@@ -151,7 +152,6 @@ const setup = () => {
   canvas?.addEventListener("touchmove", handleTouchMove);
   canvas?.addEventListener("touchstart", handleTouchStart);
   canvas?.addEventListener("touchend", handleTouchEnd);
-  canvas?.addEventListener("resize", (e) => handleResize(e));
 };
 
 window.onload = setup;

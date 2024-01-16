@@ -1,22 +1,21 @@
-import { canvas, birds, boxes, canvasW, canvasH, mE } from "../index.mjs";
+import { canvas, birds, boxes, canvasW, canvasH, mE, ds } from "../index.mjs";
 
-const ds = Math.min(window.innerWidth, window.innerHeight) / 1000;
+let BIRD_FLOCK_MIN_DIS = 120;
+let BIRD_FLOCK_MAX_DIS = 110;
+let BIRD_FLOCK_PUSH_FORCE = 0.2;
+let BIRD_FLOCK_PULL_FORCE = 0.08;
+let BIRD_FLIGHT_SPEED = 0.2;
+let EDGE_ELA_DISTANCE = 60;
+let EDGE_ELA_FORCE = 0.08;
+let BOX_ELA_DISTANCE = 30;
+let BOX_ELA_FORCE = 0.5;
+let MOUSE_ELA_DISTANCE = 120;
+let MOUSE_ELA_FORCE = 0.25;
+let BIRDSPEED = 4;
+let BIRD_MAX_MOVE = 1;
+let BIRD_BOX = 50;
 
-const BIRD_BOX = 50 * ds;
-const BIRD_FLOCK_MIN_DIS = 120;
-const BIRD_FLOCK_MAX_DIS = 110;
-const BIRD_FLOCK_PUSH_FORCE = 0.2;
-const BIRD_FLOCK_PULL_FORCE = 0.08;
-const BIRD_FLIGHT_SPEED = 0.2;
-const EDGE_ELA_DISTANCE = 60;
-const EDGE_ELA_FORCE = 0.08;
-const BOX_ELA_DISTANCE = 70;
-const BOX_ELA_FORCE = 0.3;
 const BIRD_CHAOS = 0.06;
-const MOUSE_ELA_DISTANCE = 120;
-const MOUSE_ELA_FORCE = 0.25;
-const BIRDSPEED = 4;
-const BIRD_MAX_MOVE = 1;
 
 export default class Bird {
   constructor(x, y, id) {
@@ -33,20 +32,42 @@ export default class Bird {
     image.id = id;
     this.keyframe = 0;
     canvas.appendChild(image);
+
     this.img = document.getElementById(image.id);
     this.img.style.position = "absolute";
-    this.img.style.left = this.x - BIRD_BOX / 2 + "px";
-    this.img.style.top = this.y - BIRD_BOX / 2 + "px";
-    this.img.style.width = BIRD_BOX;
-    this.img.style.height = BIRD_BOX;
     this.img.style.objectFit = "cover";
     this.img.style.pointerEvents = "none";
     this.img.style.userSelect = "none";
     this.img.style.animationDuration = 1.5;
+    this.resize();
 
     this.flight();
 
     console.log("QUACK");
+  }
+
+  resize() {
+    const factor = 0.3 + ds;
+    BIRD_FLOCK_MIN_DIS = 120 * factor;
+    BIRD_FLOCK_MAX_DIS = 110 * factor;
+    BIRD_FLOCK_PUSH_FORCE = 0.2 * factor;
+    BIRD_FLOCK_PULL_FORCE = 0.08 * factor;
+    BIRD_FLIGHT_SPEED = 0.2 * factor;
+    EDGE_ELA_DISTANCE = 60 * factor;
+    EDGE_ELA_FORCE = 0.08 * factor;
+    BOX_ELA_DISTANCE = 30 * factor;
+    BOX_ELA_FORCE = 0.5 * factor;
+    MOUSE_ELA_DISTANCE = 120 * factor;
+    MOUSE_ELA_FORCE = 0.25 * factor;
+    BIRDSPEED = 4 * factor;
+    BIRD_MAX_MOVE = 1 * factor;
+    BIRD_BOX = 50 * ds;
+
+    this.img = document.getElementById(this.img.id);
+    this.img.style.left = this.x - BIRD_BOX / 2 + "px";
+    this.img.style.top = this.y - BIRD_BOX / 2 + "px";
+    this.img.style.width = BIRD_BOX;
+    this.img.style.height = BIRD_BOX;
   }
 
   flight = () => {
