@@ -27,6 +27,8 @@ const onButtonLock = () => {
 };
 
 const dark = () => {
+  const button = document.getElementById("button");
+  button.classList.add("buttondark");
   isDark = true;
   const darkness = document.getElementById("darkness");
   darkness.style.display = "block";
@@ -39,6 +41,8 @@ const dark = () => {
 };
 
 const light = () => {
+  const button = document.getElementById("button");
+  button.classList.remove("buttondark");
   isDark = false;
   const darkness = document.getElementById("darkness");
   darkness.style.display = "none";

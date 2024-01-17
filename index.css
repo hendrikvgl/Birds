@@ -119,8 +119,13 @@ body {
     display: none;
 }
 
+.buttondark {
+    -webkit-box-shadow: 0px 0px 9px 7px rgba(255, 255, 255, 0.215);
+    -moz-box-shadow: 0px 0px 9px 7px rgba(255, 255, 255, 0.215);
+    box-shadow: 0px 0px 9px 7px rgba(255, 255, 255, 0.215);
+}
 
-#button {
+.button {
     position: absolute;
     bottom: 15%;
     background-color: #222722;
@@ -141,9 +146,9 @@ body {
     text-decoration: none;
     pointer-events: auto;
     cursor: pointer;
-    -webkit-box-shadow: 0px 0px 14px 4px rgba(0,0,0,0.1);
-    -moz-box-shadow: 0px 0px 14px 4px rgba(0,0,0,0.1);
-    box-shadow: 0px 0px 14px 4px rgba(0,0,0,0.1);
+    box-shadow: 0px 0px 9px 7px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0px 0px 9px 7px rgba(0,0,0,0.1);
+    -moz-box-shadow: 0px 0px 9px 7px rgba(0,0,0,0.1); 
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
