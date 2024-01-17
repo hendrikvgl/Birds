@@ -1,5 +1,5 @@
 import Bird from "./modules/Bird.mjs";
-import { contentMode } from "./modules/content.mjs";
+import { isDark } from "./modules/content.mjs";
 
 const TICK_RATE = 30;
 const HEIGHT_MP = 1;
@@ -159,7 +159,7 @@ window.onload = setup;
 window.onresize = handleResize;
 
 const tick = () => {
-  if (contentMode) return;
+  if (isDark) return;
   updateBirds();
   drawFood();
 };

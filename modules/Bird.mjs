@@ -1,5 +1,5 @@
 import { canvas, birds, boxes, canvasW, canvasH, mE, ds } from "../index.mjs";
-import { contentMode } from "./content.mjs";
+import { isDark } from "./content.mjs";
 
 let BIRD_FLOCK_MIN_DIS = 120;
 let BIRD_FLOCK_MAX_DIS = 110;
@@ -73,7 +73,7 @@ export default class Bird {
 
   flight = () => {
     setInterval(() => {
-      if (contentMode) return;
+      if (isDark) return;
       this.keyframe +=
         (Math.abs(this.xVel) + Math.abs(this.yVel)) * BIRD_FLIGHT_SPEED;
       this.img.style.objectPosition = `-${
