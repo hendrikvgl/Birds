@@ -6,11 +6,15 @@ let darkTimer;
 const handleMainButton = () => {
   const deg = contentMode ? 0 : 360;
   const button = document.getElementById("button");
-  const screen = document.getElementById("screen");
   button.style.mozTransform = "rotate(" + deg + "deg)";
   button.style.msTransform = "rotate(" + deg + "deg)";
   button.style.oTransform = "rotate(" + deg + "deg)";
   button.style.transform = "rotate(" + deg + "deg)";
+};
+
+const onButtonLock = () => {
+  const screen = document.getElementById("screen");
+
   contentMode = !contentMode;
   if (contentMode) {
     screen.classList.add("screendown");
@@ -44,6 +48,7 @@ const light = () => {
 
 const button = document.getElementById("button");
 button.addEventListener("click", handleMainButton);
+button.ontransitionend = onButtonLock;
 const screen = document.getElementById("screen");
 screen.ontransitionend = () => {
   setTimeout(() => {

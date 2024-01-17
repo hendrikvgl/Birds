@@ -10,8 +10,8 @@ let EDGE_ELA_DISTANCE = 60;
 let EDGE_ELA_FORCE = 0.08;
 let BOX_ELA_DISTANCE = 30;
 let BOX_ELA_FORCE = 0.5;
-let MOUSE_ELA_DISTANCE = 120;
-let MOUSE_ELA_FORCE = 0.25;
+let MOUSE_ELA_DISTANCE = 150;
+let MOUSE_ELA_FORCE = 0.4;
 let BIRDSPEED = 4;
 let BIRD_MAX_MOVE = 1;
 let BIRD_BOX = 50;
@@ -73,7 +73,7 @@ export default class Bird {
 
   flight = () => {
     setInterval(() => {
-      if (isDark) return;
+      //if (isDark) return;
       this.keyframe +=
         (Math.abs(this.xVel) + Math.abs(this.yVel)) * BIRD_FLIGHT_SPEED;
       this.img.style.objectPosition = `-${

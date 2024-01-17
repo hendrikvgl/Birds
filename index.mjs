@@ -159,7 +159,7 @@ window.onload = setup;
 window.onresize = handleResize;
 
 const tick = () => {
-  if (isDark) return;
+  //if (isDark) return;
   updateBirds();
   drawFood();
 };
