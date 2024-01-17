@@ -27,4 +27,5 @@ const end = () => {
   darkness.style.display = "none";
 };
 
-document.getElementById("button").addEventListener("click", handleMainButton);
+const button = document.getElementById("button");
+button.addEventListener("click", handleMainButton);

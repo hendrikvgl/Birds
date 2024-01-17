@@ -38,7 +38,8 @@ body {
 }
 
 #button {
-    margin-top: 10%;
+    position: absolute;
+    bottom: 15%;
     background-color: #222722;
     border-color: white;
     border-style: solid;
@@ -67,4 +68,5 @@ body {
     -moz-transition: all 0.5s ease-in-out;
     -o-transition: all 0.5s ease-in-out;
     transition: all 0.5s ease-in-out;
+    -webkit-tap-highlight-color: transparent;
 }
