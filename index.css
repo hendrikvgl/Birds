@@ -37,6 +37,13 @@
     flex: 1;
     max-height: 100px;
     cursor: pointer;
+    align-self: center;
+    justify-self: center;
+}
+.center{
+    display: flex;
+    width: 100%;
+    align-items: center;
 }
 #sTop {
     top: 0;
